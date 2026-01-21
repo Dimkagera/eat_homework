@@ -1,0 +1,244 @@
+eat = {}
+
+
+def dekorator(func):
+    def wraper(*args, **kwargs):
+        print('-' * 40)
+        result = func(*args, **kwargs)
+        print('-' * 40)
+        return result
+
+    return wraper
+
+
+# Функция для проверки ввода чисел
+def get_int_input(prompt):
+    """Получить целое число с проверкой"""
+    while True:
+        try:
+            value = input(prompt)
+            return int(value)
+        except ValueError:
+            print("Ошибка! Введите целое число.")
+        except KeyboardInterrupt:
+            print("\nПрограмма прервана.")
+            exit()
+
+
+# Функция для проверки ввода строк (не пустых)
+def get_str_input(prompt):
+    """Получить строку с проверкой на пустоту"""
+    while True:
+        try:
+            value = input(prompt).strip()
+            if value:
+                return value
+            else:
+                print("Ошибка! Ввод не может быть пустым.")
+        except KeyboardInterrupt:
+            print("\nПрограмма прервана.")
+            exit()
+
+
+# Функция для проверки выбора меню
+def get_menu_choice():
+    """Получить выбор меню с проверкой"""
+    while True:
+        try:
+            choice = input('Выберите действие (1-5) или 0 для выхода: ').strip()
+            if choice == '0':
+                return 0
+            if choice.isdigit():
+                choice_num = int(choice)
+                if 1 <= choice_num <= 5:
+                    return choice_num
+                else:
+                    print("Ошибка! Введите число от 1 до 5.")
+            else:
+                print("Ошибка! Введите число от 1 до 5.")
+        except KeyboardInterrupt:
+            print("\nПрограмма прервана.")
+            exit()
+
+
+@dekorator
+def add():
+    print("Текущие записи:")
+    print(eat if eat else "Журнал пуст")
+    name = get_str_input('Введите название продукта: ')
+
+    # Проверка на существующий продукт
+    if name in eat:
+        print(f"Продукт '{name}' уже существует! Текущее количество: {eat[name]}")
+        choice = input("Обновить количество? (да/нет): ").lower()
+        if choice in ['да', 'д', 'yes', 'y']:
+            quantity = get_int_input('Введите новое количество: ')
+            eat[name] = quantity
+            print(f"Количество обновлено: {name} - {quantity}")
+        return
+
+    quantity = get_int_input('Введите количество: ')
+    eat[name] = quantity
+    print(f"Добавлено: {name} - {quantity}")
+    print("Обновленный журнал:")
+    print(eat)
+
+
+@dekorator
+def delete():
+    if not eat:
+        print("Журнал пуст! Нечего удалять.")
+        return
+
+    print("Текущие записи:")
+    print(eat)
+    name_delete = str(input('Введите название продукта для удаления: '))
+
+    if name_delete not in eat:
+        print(f"Ошибка! Продукт '{name_delete}' не найден.")
+        return
+
+    del eat[name_delete]
+    print(f"Удален продукт: {name_delete}")
+    print("Обновленный журнал:")
+    print(eat if eat else "Журнал пуст")
+
+
+@dekorator
+def change_name():
+    if not eat:
+        print("Журнал пуст! Нечего изменять.")
+        return
+
+    print("Текущие записи:")
+    print(eat)
+    changes1 = str(input('Введите название пищи для изменения: '))
+
+    if changes1 not in eat:
+        print(f"Ошибка! Продукт '{changes1}' не найден.")
+        return
+
+    changes3 = str(input('Введите новое название: '))
+
+    # Проверка на дубликат
+    if changes3 in eat and changes3 != changes1:
+        print(f"Ошибка! Продукт '{changes3}' уже существует.")
+        return
+
+    eat[changes3] = eat.pop(changes1)
+    print(f"Название изменено: '{changes1}' -> '{changes3}'")
+    print("Обновленный журнал:")
+    print(eat)
+
+
+@dekorator
+def change_value():
+    if not eat:
+        print("Журнал пуст! Нечего изменять.")
+        return
+
+    print("Текущие записи:")
+    print(eat)
+    changes2 = str(input('Введите название пищи для изменения количества: '))
+
+    if changes2 not in eat:
+        print(f"Ошибка! Продукт '{changes2}' не найден.")
+        return
+
+    changes4 = int(input(f'Текущее количество: {eat[changes2]}. Введите новое количество: '))
+    eat[changes2] = changes4
+    print(f"Количество изменено: {changes2} -> {changes4}")
+    print("Обновленный журнал:")
+    print(eat)
+
+
+@dekorator
+def change():
+    if not eat:
+        print("Журнал пуст! Нечего изменять.")
+        return
+
+    print("Текущие записи:")
+    print(eat)
+    changes5 = str(input('Введите название пищи для изменения: '))
+
+    if changes5 not in eat:
+        print(f"Ошибка! Продукт '{changes5}' не найден.")
+        return
+
+    changes6 = str(input('Введите новое название: '))
+
+    # Проверка на дубликат
+    if changes6 in eat and changes6 != changes5:
+        print(f"Ошибка! Продукт '{changes6}' уже существует.")
+        return
+
+    changes7 = int(input('Введите новое количество: '))
+
+    # Удаляем старую запись и добавляем новую
+    del eat[changes5]
+    eat[changes6] = changes7
+
+    print(f"Продукт изменен: '{changes5}' -> '{changes6}', количество: {changes7}")
+    print("Обновленный журнал:")
+    print(eat)
+
+
+def menu():
+    print('ЖУРНАЛ ПИТАНИЯ')
+    print('Возможные функции:')
+    print('1. Добавление еды и её количества в журнал')
+    print('2. Удаление еды из журнала')
+    print('3. Изменение названия еды')
+    print('4. Изменение количества еды')
+    print('5. Изменение названия и количества еды')
+    print('0. Выход из программы')
+
+
+# Главный бесконечный цикл программы
+@dekorator
+def main():
+    print("ПРОГРАММА: УЧЕТ ПИТАНИЯ")
+
+    while True:
+        try:
+            # Показываем меню
+            menu()
+
+            # Получаем выбор пользователя с проверкой
+            choice = int(input())
+
+            if choice == 0:
+                print("\nВыход из программы...")
+                print("Финальное состояние журнала:")
+                print(eat if eat else "Журнал пуст")
+                print("=" * 50)
+                print("Спасибо за использование!")
+                break
+
+            # Выполняем выбранную функцию
+            if choice == 1:
+                add()
+            elif choice == 2:
+                delete()
+            elif choice == 3:
+                change_name()
+            elif choice == 4:
+                change_value()
+            elif choice == 5:
+                change()
+
+            # Пауза перед следующим действием
+            input("\nНажмите Enter для продолжения...")
+
+        except KeyboardInterrupt:
+            print("\n\nПрограмма прервана.")
+            break
+        except Exception as e:
+            print(f"\nПроизошла ошибка: {e}")
+            print("Попробуйте еще раз...")
+
+
+# Запуск программы
+if __name__ == "__main__":
+    main()
