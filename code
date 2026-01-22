@@ -1,5 +1,13 @@
 eat = {}
 
+def counter(func):
+    def wrapper(*args, **kwargs):
+        wrapper.count += 1  # Увеличиваем счётчик при каждом вызове функции
+        print(f'Функция {func.__name__} была вызвана {wrapper.count} раз(а)')
+        return func(*args, **kwargs)
+    wrapper.count = 0  # Инициализируем счётчик
+    return wrapper
+
 
 def dekorator(func):
     def wraper(*args, **kwargs):
@@ -62,6 +70,7 @@ def get_menu_choice():
 
 
 @dekorator
+@counter
 def add():
     print("Текущие записи:")
     print(eat if eat else "Журнал пуст")
@@ -85,6 +94,7 @@ def add():
 
 
 @dekorator
+@counter
 def delete():
     if not eat:
         print("Журнал пуст! Нечего удалять.")
@@ -105,6 +115,7 @@ def delete():
 
 
 @dekorator
+@counter
 def change_name():
     if not eat:
         print("Журнал пуст! Нечего изменять.")
@@ -132,6 +143,7 @@ def change_name():
 
 
 @dekorator
+@counter
 def change_value():
     if not eat:
         print("Журнал пуст! Нечего изменять.")
@@ -153,6 +165,7 @@ def change_value():
 
 
 @dekorator
+@counter
 def change():
     if not eat:
         print("Журнал пуст! Нечего изменять.")
