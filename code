@@ -1,5 +1,5 @@
 eat = {}
-
+#декоратор для подсчета количества запусков каждой функции
 def counter(func):
     def wrapper(*args, **kwargs):
         wrapper.count += 1  # Увеличиваем счётчик при каждом вызове функции
@@ -8,7 +8,7 @@ def counter(func):
     wrapper.count = 0  # Инициализируем счётчик
     return wrapper
 
-
+#декоратор для крассивого консольного вывода
 def dekorator(func):
     def wraper(*args, **kwargs):
         print('-' * 40)
@@ -71,6 +71,7 @@ def get_menu_choice():
 
 @dekorator
 @counter
+# Функция для добавления еды в словарь
 def add():
     print("Текущие записи:")
     print(eat if eat else "Журнал пуст")
@@ -95,6 +96,7 @@ def add():
 
 @dekorator
 @counter
+# Функция для удаления еды из словаря
 def delete():
     if not eat:
         print("Журнал пуст! Нечего удалять.")
@@ -116,6 +118,7 @@ def delete():
 
 @dekorator
 @counter
+# Функция для изменения названия еды в словаре
 def change_name():
     if not eat:
         print("Журнал пуст! Нечего изменять.")
@@ -144,6 +147,7 @@ def change_name():
 
 @dekorator
 @counter
+# Функция для изменения значения в словаре
 def change_value():
     if not eat:
         print("Журнал пуст! Нечего изменять.")
@@ -166,6 +170,7 @@ def change_value():
 
 @dekorator
 @counter
+# Функция для изменения названия еды и её количества
 def change():
     if not eat:
         print("Журнал пуст! Нечего изменять.")
@@ -196,7 +201,7 @@ def change():
     print("Обновленный журнал:")
     print(eat)
 
-
+# Функцция возможных функций
 def menu():
     print('ЖУРНАЛ ПИТАНИЯ')
     print('Возможные функции:')
